@@ -1,4 +1,4 @@
-# auth/auth_controller.py
+# auth/auth_controller.py (CÓDIGO CORRECTO - FINAL)
 import streamlit as st
 from database.supabase_client import supabase_client
 
@@ -9,14 +9,14 @@ def login(email, password):
     """
     try:
         response = supabase_client.auth.sign_in_with_password({"email": email, "password": password})
-        print("DEBUG - Response Object:", response)  # *** AÑADIDO PARA DEBUGGING ***
-        print("DEBUG - Response Dictionary:", response.__dict__) # *** AÑADIDO PARA DEBUGGING ***
+        print("DEBUG - Response Object:", response)
+        print("DEBUG - Response Dictionary:", response.__dict__)
 
-        if hasattr(response, 'error') and response.error:  # Comprobación más segura de si 'error' existe y no es None
+        if hasattr(response, 'error') and response.error:
             st.error(f"Error de login: {response.error.message}")
             return False
         else:
-            st.session_state.supabase_session = response.data.session # Guarda la sesión
+            st.session_state.supabase_session = response.session  # *** ACCESO CORRECTO: response.session ***
             return True
     except Exception as e:
         st.error(f"Error inesperado durante el login: {e}")
@@ -47,7 +47,7 @@ def get_current_user():
             if user_response.error:
                 st.error(f"Error al obtener información del usuario: {user_response.error.message}")
                 return None
-            return user_response.data.user
+            return user_response.data.user # Aquí sí usamos .data porque get_user() parece tener una estructura diferente
         except Exception as e:
             st.error(f"Error al obtener información del usuario: {e}")
             return None
