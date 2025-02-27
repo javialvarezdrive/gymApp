@@ -9,7 +9,10 @@ def login(email, password):
     """
     try:
         response = supabase_client.auth.sign_in_with_password({"email": email, "password": password})
-        if response.error:
+        print("DEBUG - Response Object:", response)  # *** AÑADIDO PARA DEBUGGING ***
+        print("DEBUG - Response Dictionary:", response.__dict__) # *** AÑADIDO PARA DEBUGGING ***
+
+        if hasattr(response, 'error') and response.error:  # Comprobación más segura de si 'error' existe y no es None
             st.error(f"Error de login: {response.error.message}")
             return False
         else:
